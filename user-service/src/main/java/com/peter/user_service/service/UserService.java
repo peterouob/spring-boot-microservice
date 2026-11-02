@@ -2,6 +2,7 @@ package com.peter.user_service.service;
 
 import com.peter.user_service.dto.UserDto;
 import com.peter.user_service.entity.User;
+import com.peter.user_service.exception.UserNotFoundException;
 import com.peter.user_service.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -31,11 +32,11 @@ public class UserService {
     }
 
     public UserDto getUserById(Long id) {
-        return userRepository.findById(id).map(this::toUserDto).orElse(null);
+        return userRepository.findById(id).map(this::toUserDto).orElseThrow(() -> new UserNotFoundException("User not found with id" + id));
     }
 
     public void updateUser(Long id, UserDto userDto) {
-        User user = userRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("User not found with id: " + id));
+        User user = userRepository.findById(id).orElseThrow(()-> new UserNotFoundException("User not found with id: " + id));
 
         user.setName(userDto.getName());
         user.setSurname(userDto.getSurname());
@@ -48,7 +49,7 @@ public class UserService {
     }
 
     public void deleteUser(Long id) {
-        User user = userRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("User not found with id: " + id));
+        User user = userRepository.findById(id).orElseThrow(()-> new UserNotFoundException("User not found with id: " + id));
 
         userRepository.delete(user);
     }
