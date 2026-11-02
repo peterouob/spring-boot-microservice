@@ -13,10 +13,10 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class LoggingAspect {
 
-    @Pointcut("execution(* com.peter.user_service..*.*(..))")
+    @Pointcut("execution(* com.peter.user_service.*.*(..))")
     public void serviceMethods(){}
 
-    @Before("serviceMethods")
+    @Before("serviceMethods()")
     public void logBefore(JoinPoint joinPoint) {
         log.info("Called service method: {}, with argument: {}",
                 joinPoint.getSignature().getName(),
